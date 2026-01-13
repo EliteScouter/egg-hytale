@@ -77,7 +77,7 @@ load_cached_tokens() {
     SESSION_TOKEN=$(jq -r '.session_token' "$AUTH_CACHE_FILE")
     IDENTITY_TOKEN=$(jq -r '.identity_token' "$AUTH_CACHE_FILE")
     PROFILE_UUID=$(jq -r '.profile_uuid' "$AUTH_CACHE_FILE")
-    
+
     # Validate all required tokens are present
     if [ -z "$ACCESS_TOKEN" ] || [ "$ACCESS_TOKEN" = "null" ] || \
        [ -z "$SESSION_TOKEN" ] || [ "$SESSION_TOKEN" = "null" ] || \
@@ -87,7 +87,7 @@ load_cached_tokens() {
         rm "$AUTH_CACHE_FILE"
         return 1
     fi
-    
+
     echo "✓ Loaded cached authentication tokens"
     return 0
 }
@@ -234,7 +234,7 @@ perform_authentication() {
 
     echo "✓ Game server session created successfully!"
     echo ""
-    
+
     # Save tokens for future use
     save_auth_tokens
 }
@@ -319,9 +319,10 @@ if [ "${LEVERAGE_AHEAD_OF_TIME_CACHE}" = "1" ]; then
     JAVA_CMD="${JAVA_CMD} -XX:AOTCache=HytaleServer.aot"
 fi
 
-# Add max memory if set and greater than 0
-if [ -n "${SERVER_MEMORY}" ] && [ "${SERVER_MEMORY}" -gt 0 ] 2>/dev/null; then
-    JAVA_CMD="${JAVA_CMD} -Xms${SERVER_MEMORY}M -Xmx${SERVER_MEMORY}M"
+# Add max memory if set and greater than MEMORY_OVERHEAD
+if [ -n "${SERVER_MEMORY}" ] && [ "${SERVER_MEMORY}" -gt "${MEMORY_OVERHEAD}" ] 2>/dev/null; then
+    JAVA_MEMORY=$((SERVER_MEMORY - MEMORY_OVERHEAD))
+    JAVA_CMD="${JAVA_CMD} -Xms${JAVA_MEMORY}M -Xmx${JAVA_MEMORY}M"
 fi
 
 # Add JVM arguments if set

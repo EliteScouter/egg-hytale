@@ -83,6 +83,7 @@ The following options can be configured:
 | `Enable Backups` | Enable automatic backups | `false` |
 | `Backup Frequency` | Backup interval in minutes | `30` |
 | `Patchline` | What release channel you want to use | `release` |
+| `Memory overhead` | The amount of RAM (in MB) kept aside for the system so the server doesn’t use everything. Java will get the rest. | `0` |
 
 ### First-Time Authentication
 
